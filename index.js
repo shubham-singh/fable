@@ -11,31 +11,41 @@ function App() {
 
     const setRandomFable = (data) => {
         let fablesData = []
+
         if (Array.isArray(data) && data[0].fable !== undefined && data[0].author !== undefined) {
             fablesData = data
         } else {
             fablesData = fables
         }
 
+        if (data.type === "keydown" && !["ArrowLeft", "ArrowRight"].includes(data.key)) {
+            return
+        }
+
+        if (data.type === "keydown" && data.key === "ArrowLeft") {
+            if (viewedFables.length > 1) {
+                const indexToJump = viewedFables[viewedFables.length - 2]
+                setCurrentFable(fables[indexToJump])
+                setViewedFables(viewedFables.slice(0, viewedFables.length - 1))
+            }
+            return
+        }
+
         let index = 0
-        while (true) {
+
+        do {
             index = getRandomInt(0, fablesData.length)
             if (viewedFables.length === fables.length) {
-                index = 0
-                setViewedFables([0])
+                setViewedFables([index])
                 break
             }
             if (!viewedFables.includes(index)) {
                 setViewedFables((viewedFables) => viewedFables.concat(index))
                 break
             }
-        }
+        } while (true)
 
-        if (isNaN(index)) {
-            setCurrentFable(fablesData[0])
-        } else {
-            setCurrentFable(fablesData[index])
-        }
+        setCurrentFable(fablesData[index])
     }
 
     React.useEffect(async function () {
@@ -51,7 +61,7 @@ function App() {
 
     if (currentFable !== undefined) {
         return <>
-            <div class="container" onClick={setRandomFable}>
+            <div class="container" onClick={setRandomFable} tabIndex="0" onKeyDown={setRandomFable}>
                 <div class="fable">
                     <p>{currentFable.fable}</p>
                 </div>
