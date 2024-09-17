@@ -31,13 +31,16 @@ function App() {
             return
         }
 
-        let index = 0
-
+        let index
         do {
             index = getRandomInt(0, fablesData.length)
-            if (viewedFables.length === fables.length) {
-                setViewedFables([index])
-                break
+            if (viewedFables.length === fablesData.length) {
+                if (index !== viewedFables[viewedFables.length - 1]) {
+                    setViewedFables([index])
+                    break
+                } else {
+                    continue
+                }
             }
             if (!viewedFables.includes(index)) {
                 setViewedFables((viewedFables) => viewedFables.concat(index))
